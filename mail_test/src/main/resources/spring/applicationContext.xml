@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+    <beans xmlns="http://www.springframework.org/schema/beans"  
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"  
+        xmlns:context="http://www.springframework.org/schema/context"  
+        xmlns:mvc="http://www.springframework.org/schema/mvc"  
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd  
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">  
+      
+        <!--配置service的包扫描，自动注入Service-->  
+        <context:component-scan base-package="com.ir.service"/>  
+      
+        <!-- 使用spring自带的占位符替换功能 -->  
+        <bean  
+            class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+            <!-- 允许JVM参数覆盖 -->  
+            <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />  
+            <!-- 忽略没有找到的资源文件 -->  
+            <property name="ignoreResourceNotFound" value="true" />  
+            <!-- 配置资源文件 -->  
+            <property name="locations">  
+                <list>  
+                    <value>classpath:jdbc.properties</value>  
+                </list>  
+            </property>  
+        </bean>  
+      
+      
+        <!-- 数据库连接池 :dataSource-->  
+        <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource"  
+            destroy-method="close">  
+            <!-- 数据库驱动 -->  
+            <property name="driverClass" value="${jdbc.classDriver}" />  
+            <!-- 相应驱动的jdbcUrl -->  
+            <property name="jdbcUrl" value="${jdbc.url}" />  
+            <!-- 数据库的用户名 -->  
+            <property name="username" value="${jdbc.username}" />  
+            <!-- 数据库的密码 -->  
+            <property name="password" value="${jdbc.password}" />  
+            <!-- 检查数据库连接池中空闲连接的间隔时间，单位是分，默认值：240，如果要取消则设置为0 -->  
+            <property name="idleConnectionTestPeriod" value="60" />  
+            <!-- 连接池中未使用的链接最大存活时间，单位是分，默认值：60，如果要永远存活设置为0 -->  
+            <property name="idleMaxAge" value="30" />  
+            <!-- 每个分区最大的连接数 -->  
+            <property name="maxConnectionsPerPartition" value="150" />  
+            <!-- 每个分区最小的连接数 -->  
+            <property name="minConnectionsPerPartition" value="5" />  
+        </bean>
+        
+        <bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">  
+    		<property name="defaultEncoding" value="UTF-8" />  
+   			<property name="host" value="smtp.qq.com" />  
+    		<property name="username" value="13683588016@163.com" />  
+    		<property name="password" value="caoyang960105" />  
+    		<property name="javaMailProperties">  
+        		<props>  
+            		<prop key="mail.smtp.auth">true</prop>  
+            		<prop key="mail.debug">true</prop>  
+            		<prop key="mail.smtp.timeout">25000</prop>  
+            		<prop key="mail.smtp.port">25</prop>  
+        		</props>  
+    		</property>  
+		</bean>  
+		
+		<bean id="SendMailPackage" class="com.ir.controller.SendMailPackage">  
+    		<property name="javaMailSender" ref="javaMailSender" />  
+    		<property name="from">  
+        	<value><![CDATA[lalahu<564438733@qq.com>]]></value>  
+    	</property>  
+		</bean>  
+    </beans>  
