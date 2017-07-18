@@ -5,8 +5,11 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 /**
  *@author 曹洋
@@ -15,11 +18,16 @@ import org.springframework.data.redis.core.ValueOperations;
  *
  *
  */
+@Service
 public class RedisUtil {
 
-	private Logger logger = Logger.getLogger(RedisUtil.class);  
+	private Logger logger = Logger.getLogger(RedisUtil.class); 
+	@Autowired
     private RedisTemplate<Serializable, Object> redisTemplate;  
-  
+	
+	public void setSpringDao(RedisTemplate redisTemplate) {  
+        this.redisTemplate = redisTemplate;  
+    }
     /** 
      * 批量删除对应的value 
      *  
@@ -71,8 +79,8 @@ public class RedisUtil {
      */  
     public Object get(final String key) {  
         Object result = null;  
-        ValueOperations<Serializable, Object> operations = redisTemplate  
-                .opsForValue();  
+        ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();  
+                  
         result = operations.get(key);  
         return result;  
     }  
@@ -87,8 +95,8 @@ public class RedisUtil {
     public boolean set(final String key, Object value) {  
         boolean result = false;  
         try {  
-            ValueOperations<Serializable, Object> operations = redisTemplate  
-                    .opsForValue();  
+            ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();  
+                      
             operations.set(key, value);  
             result = true;  
         } catch (Exception e) {  
@@ -107,8 +115,8 @@ public class RedisUtil {
     public boolean set(final String key, Object value, Long expireTime) {  
         boolean result = false;  
         try {  
-            ValueOperations<Serializable, Object> operations = redisTemplate  
-                    .opsForValue();  
+            ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();  
+                      
             operations.set(key, value);  
             redisTemplate.expire(key, expireTime, TimeUnit.SECONDS);  
             result = true;  

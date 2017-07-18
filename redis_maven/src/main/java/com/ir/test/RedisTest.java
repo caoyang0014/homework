@@ -1,7 +1,10 @@
 package com.ir.test;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.ir.util.RedisUtil;
 
@@ -16,11 +19,13 @@ import redis.clients.jedis.JedisPool;
  *
  *
  */
+@Service("redisTemplate")
 public class RedisTest {
 
 	JedisPool pool;
     Jedis jedis; 
-    private static RedisUtil redisUtil;
+    @Autowired
+    private RedisUtil redisUtil;
     
     
 	@Test

@@ -25,11 +25,14 @@ public class UserServiceImpl implements IUserService {
 	@Autowired
 	private IUserDao dao;
 	
-	private RedisUtil redisUtil;
+	private RedisUtil redisUtil; 
 	
+	public void setSpringDao(RedisUtil redisUtil) {  
+        this.redisUtil = redisUtil;  
+    }
 	
 	/* 
-	 * @method
+	 * @method 获取list列表
 	 * @author 曹洋
 	 * @时间 2017年7月10日 下午3:31:58
 	 *  
@@ -37,12 +40,16 @@ public class UserServiceImpl implements IUserService {
 	public List<User> getList() {
 		// TODO Auto-generated method stub
 		List<User> list = dao.getList();
-		for (User user : list) {
-			redisUtil.set("userid", "user.getId()");
-			redisUtil.set("username", "user.getUsername()");
-			redisUtil.set("userpass", "user.getPassword()");
-			redisUtil.set("userage", "user.getAge()");
+		RedisUtil redisUtil = new RedisUtil();
+		if(list!=null && list.size() > 0){
+			for (User user : list) {
+				redisUtil.set("userid", user.getId());
+				redisUtil.set("username", user.getUsername());
+				redisUtil.set("userpass", user.getPassword());
+				redisUtil.set("userage", user.getAge());
+			}
 		}
+		
 		return list;
 	}
 
